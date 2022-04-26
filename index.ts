@@ -23,6 +23,8 @@ console.log('你好ts')
     null 和 undefined
     void 类型
     never 类型
+    字面量
+    unknown (任意类型的安全模式)
  */
 
 // 布尔类型 (boolean)
@@ -109,6 +111,47 @@ console.log(run1()) // 123
 // a = (()=>{
 //     throw new Error('错误')
 // })()
+
+// 字面量
+let kk: 10 // 字面量的方式，相当于将变量直接定义在了10，赋值其他的值就不符合要求
+kk = 10
+// kk = 11 // 报错
+let ll: 1 | 2 | 3 // | 表示或
+ll = 1
+ll = 2
+ll = 3
+// ll = 4 // 报错
+
+// unknown
+let jj: unknown
+jj = 1
+jj = 'hello'
+let ss: string
+// ss = jj // 报错，虽然jj可以说也是any类型，但是它算是any类型的安全模式，不能将unknown类型赋值给指定固定类型的变量
+ss = jj as string // 可以使用类型断言
+ss = <string>jj // 或者这种类型断言的写法
+
+// 类型别名
+// let pp: 1 | 2 | 3 | 4 | 5
+// let oo: 1 | 2 | 3 | 4 | 5
+// 上面这样写就会很重复很麻烦，可以用类型别名来简化
+type myValType = 1 | 2 | 3 | 4 | 5
+let pp: myValType
+let oo: myValType
+
+// object
+let y: {
+    name: string,
+    age: number,
+    gender?: number
+}
+y = {name: 'ray', age: 20}
+let ee: {
+    name: string,
+    [otherProp: string]: string
+} // 可以通过上面的写法表示剩余的属性，反正name是需要的，其他的有无无所谓
+ee = {name: 'ray'}
+ee = {name: 'ray', status: 'live', gender: 'male'}
 
 
 
@@ -297,8 +340,9 @@ Cat.func2(); // 222  */
 class Dog {
     public name: string; // 实例属性
     public age: number = 20; // 实例属性
+    gender: string = 'male' // 实例属性
 
-    static sex:string = '公';
+    static sex:string = '公'; // 类属性（静态属性）
 
     constructor(name: string) {
         this.name = name;
@@ -316,6 +360,7 @@ class Dog {
 var d = new Dog('旺财');
 console.log(d.name); // 旺财
 console.log(d.age); // 20
+console.log(d.gender); // male
 d.run(); // 旺财在狂奔,它已经20岁了
 d.eat(); // 旺财在吃屎
 Dog.sexInfo();
@@ -593,6 +638,12 @@ function getData22<T>(value:T):any{
 }
 console.log(getData22<number>(123)); // 123456123
 console.log(getData22<string>('这是一个泛型')); // 123456这是一个泛型
+function fn22<T, K>(a: T, b: K): T {
+    console.log(b)
+    return a
+}
+fn22<number, string>(1, '2')
+
 
 // 泛型类
 // 下面这种有局限性，只能传入一种数据类型
